@@ -1,0 +1,43 @@
+{
+  "F01": {
+    "schema": "diagnostic",
+    "valid": true,
+    "expected_ui": "render"
+  },
+  "F02": {
+    "schema": "diagnostic",
+    "valid": true,
+    "expected_ui": "partial"
+  },
+  "F03": {
+    "schema": "diagnostic",
+    "valid": true,
+    "expected_agent": "bundled_offline"
+  },
+  "F04": {
+    "schema": "diagnostic",
+    "valid": true,
+    "expected_ui": "unknown_memory"
+  },
+  "F05": {
+    "schema": "diagnostic",
+    "valid": true,
+    "expected_comparison": "not_comparable"
+  },
+  "F06": {
+    "schema": "diagnostic",
+    "valid": false,
+    "expected_import": "unsupported_schema_version"
+  },
+  "F07": {
+    "schema": "catalog",
+    "valid": true,
+    "manifest_schema_valid": true,
+    "expected_activation": "reject_bad_hash_or_size_or_unsigned"
+  },
+  "F08": {
+    "schema": "catalog",
+    "valid": false,
+    "expected_activation": "reject_incompatible_override"
+  }
+}

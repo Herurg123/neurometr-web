@@ -1,0 +1,209 @@
+{
+  "kind": "neurometr.diagnostic",
+  "schema_version": "0.1.0",
+  "run_id": "d4c290e3-74d3-461d-9812-9ee76f644332",
+  "started_at": "2026-11-11T10:00:00Z",
+  "finished_at": "2026-11-11T10:00:05Z",
+  "overall_status": "ok",
+  "producer": {
+    "name": "neurometr-agent",
+    "version": "0.1.0",
+    "platform": "windows-x64"
+  },
+  "engines": [
+    {
+      "name": "llmfit",
+      "version": "1.1.20",
+      "status": "ok",
+      "sha256": null
+    }
+  ],
+  "catalog_ref": {
+    "version": "2026.11.11.1",
+    "sha256": null,
+    "origin": "bundled",
+    "compatibility": "passed"
+  },
+  "hardware": {
+    "os": {
+      "family": "windows",
+      "version": "11",
+      "arch": "x64",
+      "evidence": {
+        "kind": "detected",
+        "source": "agent:os_api"
+      }
+    },
+    "cpu": {
+      "model": "Synthetic Example Processor",
+      "physical_cores": 4,
+      "logical_processors": 8,
+      "evidence": {
+        "kind": "detected",
+        "source": "agent:os_api"
+      }
+    },
+    "ram": {
+      "physical_total_bytes": 17179869184,
+      "available_bytes": 8589934592,
+      "available_observed_at": "2026-11-11T10:00:00Z",
+      "evidence": {
+        "kind": "detected",
+        "source": "agent:os_api"
+      }
+    },
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Synthetic Example GPU",
+        "memory": {
+          "dedicated_total_bytes": 4294967296,
+          "dedicated_available_bytes": null,
+          "shared_total_bytes": null
+        },
+        "memory_topology": "dedicated",
+        "evidence": {
+          "kind": "detected",
+          "source": "agent:os_api"
+        }
+      }
+    ],
+    "npus": []
+  },
+  "runtime_checks": [
+    {
+      "runtime_id": "llama.cpp",
+      "discovery_status": "detected",
+      "launch_status": "not_tested",
+      "backend_id": "cpu",
+      "error_code": null,
+      "evidence": {
+        "kind": "detected",
+        "source": "agent:llmfit"
+      }
+    }
+  ],
+  "model_assessments": [
+    {
+      "model_id": "hf:example/vikhr-synthetic",
+      "artifact_id": "gguf:q8_0:synthetic",
+      "source_model_name": "Illustrative CPU/SYCL comparison based on E4",
+      "execution": {
+        "device_path": "cpu_only",
+        "backend_id": "cpu",
+        "runtime_id": "llama.cpp",
+        "runtime_version": "0.9.0-dev",
+        "gpu_layers": 0,
+        "context_tokens": 4096,
+        "threads": 4
+      },
+      "fit": {
+        "status": "unknown",
+        "evidence": {
+          "kind": "unknown",
+          "source": "agent:llmfit"
+        }
+      },
+      "speed_estimate": {
+        "tokens_per_second": 35.6,
+        "algorithm_id": "llmfit:1.1.20",
+        "backend_id": "sycl",
+        "execution": {
+          "device_path": "gpu_offload",
+          "backend_id": "sycl",
+          "runtime_id": "llama.cpp",
+          "runtime_version": "0.9.0-dev",
+          "gpu_layers": null,
+          "context_tokens": 4096,
+          "threads": 4
+        },
+        "evidence": {
+          "kind": "estimated",
+          "source": "agent:llmfit",
+          "notes": "Illustrative E4-like forecast; SYCL was not executed."
+        }
+      },
+      "measurements": [
+        {
+          "kind": "generation_tps",
+          "value": 22.7,
+          "unit": "tokens/s",
+          "repetitions": 3,
+          "benchmark_id": "synthetic:tg64",
+          "execution": {
+            "device_path": "cpu_only",
+            "backend_id": "cpu",
+            "runtime_id": "llama.cpp",
+            "runtime_version": "0.9.0-dev",
+            "gpu_layers": 0,
+            "context_tokens": 4096,
+            "threads": 4
+          },
+          "evidence": {
+            "kind": "measured",
+            "source": "synthetic:fixture",
+            "notes": "Illustrates a user-reported E4 CPU-only result, not a new benchmark."
+          }
+        }
+      ],
+      "load_status": "not_tested"
+    }
+  ],
+  "cloud_checks": [
+    {
+      "service_id": "example-cloud",
+      "target_id": "example-https",
+      "origin": "local_agent",
+      "checked_at": "2026-11-11T10:00:00Z",
+      "consent": true,
+      "network_context": {
+        "proxy_mode": "system"
+      },
+      "probes": [
+        {
+          "stage": "dns",
+          "status": "passed",
+          "duration_ms": 14,
+          "http_status": null,
+          "error_code": null,
+          "evidence": {
+            "kind": "measured",
+            "source": "agent:network"
+          }
+        },
+        {
+          "stage": "http",
+          "status": "passed",
+          "duration_ms": 120,
+          "http_status": 401,
+          "error_code": null,
+          "evidence": {
+            "kind": "measured",
+            "source": "agent:network"
+          }
+        }
+      ],
+      "conclusion": "auth_required"
+    }
+  ],
+  "components": [
+    {
+      "component": "hardware",
+      "status": "ok"
+    },
+    {
+      "component": "llmfit",
+      "status": "ok"
+    },
+    {
+      "component": "cloud",
+      "status": "ok"
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Entire record is synthetic; numeric values are not real measurements.",
+    "HTTP 401 indicates authorization is required, not geo-blocking.",
+    "F05 is synthetic and illustrative based on E4; modes differ, comparison is not_comparable."
+  ]
+}

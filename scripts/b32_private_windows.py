@@ -23,6 +23,11 @@ CATALOG_VERSION = "2026.11.11.2"
 CATALOG_BYTES = 6589
 PRIVATE = Path(os.environ["RUNNER_TEMP"]) / "neurometr-b32-private"
 OUTPUT = PRIVATE / "diagnostic.json"
+STAGE = "init"
+
+def mark(stage):
+    global STAGE
+    STAGE = stage
 
 
 def require(condition, reason):
@@ -42,11 +47,13 @@ def main():
     require(sys.platform == "win32", "Windows 2025 x64 runner required")
     require(not PRIVATE.exists(), "stale private directory")
     PRIVATE.mkdir(parents=True, mode=0o700)
+    mark("checkout")
     require(AGENT.is_dir(), "pinned Agent checkout missing")
     source_sha = run_silent(["git", "rev-parse", "HEAD"], cwd=AGENT).strip().decode("ascii")
     require(source_sha == EXPECTED_AGENT_COMMIT, "Agent commit mismatch")
 
     # Approved source catalog is a Web-main file, unchanged in B3.2.
+    mark("catalog_pin")
     original_web_catalog = WEB / "catalog" / "versions" / CATALOG_VERSION / "catalog.json"
     web_catalog = original_web_catalog.read_bytes()
     agent_catalog = (AGENT / "bundled" / "catalog.json").read_bytes()
@@ -65,14 +72,17 @@ def main():
         "pin": PRIVATE / "catalogcheck.exe",
     }
     for name, path in binaries.items():
+        mark("go_build_" + name)
         run_silent(["go", "build", "-o", str(path), "./cmd/" +
                     {"diagnose": "diagnose", "validate": "contractvalidate", "pin": "catalogcheck"}[name]],
                    cwd=AGENT, timeout=240)
+    mark("catalog_pin_binary")
     run_silent([str(binaries["pin"]), "-root", str(AGENT)], cwd=AGENT)
     env = dict(os.environ)
     env.pop("NEUROMETR_A3_TEST_ONLY", None)
     env.pop("NEUROMETR_CATALOG_PATH", None)
     # No test-only flag, no -catalog override, no optional llmfit binary.
+    mark("native_export")
     completed = subprocess.run(
         [str(binaries["diagnose"]), "-root", str(AGENT), "-output", str(OUTPUT)],
         cwd=AGENT, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -82,15 +92,18 @@ def main():
     require(b"A3_2_REPORT_VALID=true" in completed.stdout, "native exporter verdict missing")
     raw = OUTPUT.read_bytes()
     require(0 < len(raw) <= 2 * 1024 * 1024, "diagnostic size invalid")
+    mark("go_validation")
     outcome_raw = run_silent([str(binaries["validate"]), "-root", str(AGENT),
                               "-kind", "diagnostic"], cwd=AGENT, input_bytes=raw)
     require(json.loads(outcome_raw)["valid"] is True, "Go FullValidator rejected diagnostic")
 
     # Independently verify exact canonical Web Python oracle, not merely JSON.parse.
+    mark("python_oracle")
     sys.path.insert(0, str(WEB / "contracts" / "tests"))
     from test_contracts import LIMIT_DIAGNOSTIC, decode_bounded, validate
     report = decode_bounded(raw, LIMIT_DIAGNOSTIC)
     validate("diagnostic", report)
+    mark("report_fields")
     require(report["kind"] == "neurometr.diagnostic" and
             report["schema_version"] == "0.1.0", "wrong kind/version")
     require(report["catalog_ref"] == {
@@ -140,6 +153,6 @@ if __name__ == "__main__":
         main()
     except BaseException:
         # Preserve failure exit code without leaking raw exception/paths/stderr.
-        print("B32_PRIVATE_REPORT_CREATION=FAIL_REDACTED", file=sys.stderr)
+        print("B32_PRIVATE_REPORT_CREATION=FAIL_REDACTED STAGE=" + STAGE, file=sys.stderr)
         shutil.rmtree(PRIVATE, ignore_errors=True)
         sys.exit(1)

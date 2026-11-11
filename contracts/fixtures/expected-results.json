@@ -22,7 +22,8 @@
   "F05": {
     "schema": "diagnostic",
     "valid": true,
-    "expected_comparison": "not_comparable"
+    "expected_comparison": "not_comparable",
+    "expected_assessment_count": 2
   },
   "F06": {
     "schema": "diagnostic",
@@ -38,6 +39,7 @@
   "F08": {
     "schema": "catalog",
     "valid": false,
-    "expected_activation": "reject_incompatible_override"
+    "expected_activation": "reject_incompatible_override",
+    "validation_scope": "schema/status rejection only; llmfit CLI field support not tested"
   }
 }

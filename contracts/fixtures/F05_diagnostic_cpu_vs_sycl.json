@@ -104,25 +104,7 @@
           "source": "agent:llmfit"
         }
       },
-      "speed_estimate": {
-        "tokens_per_second": 35.6,
-        "algorithm_id": "llmfit:1.1.20",
-        "backend_id": "sycl",
-        "execution": {
-          "device_path": "gpu_offload",
-          "backend_id": "sycl",
-          "runtime_id": "llama.cpp",
-          "runtime_version": "0.9.0-dev",
-          "gpu_layers": null,
-          "context_tokens": 4096,
-          "threads": 4
-        },
-        "evidence": {
-          "kind": "estimated",
-          "source": "agent:llmfit",
-          "notes": "Illustrative E4-like forecast; SYCL was not executed."
-        }
-      },
+      "speed_estimate": null,
       "measurements": [
         {
           "kind": "generation_tps",
@@ -146,6 +128,48 @@
           }
         }
       ],
+      "load_status": "not_tested"
+    },
+    {
+      "model_id": "hf:example/vikhr-synthetic",
+      "artifact_id": "gguf:q8_0:synthetic",
+      "source_model_name": "Illustrative CPU/SYCL comparison based on E4",
+      "execution": {
+        "device_path": "gpu_offload",
+        "backend_id": "sycl",
+        "runtime_id": "llama.cpp",
+        "runtime_version": "0.9.0-dev",
+        "gpu_layers": null,
+        "context_tokens": 4096,
+        "threads": 4
+      },
+      "fit": {
+        "status": "unknown",
+        "evidence": {
+          "kind": "unknown",
+          "source": "agent:llmfit"
+        }
+      },
+      "speed_estimate": {
+        "tokens_per_second": 35.6,
+        "algorithm_id": "llmfit:1.1.20",
+        "backend_id": "sycl",
+        "execution": {
+          "device_path": "gpu_offload",
+          "backend_id": "sycl",
+          "runtime_id": "llama.cpp",
+          "runtime_version": "0.9.0-dev",
+          "gpu_layers": null,
+          "context_tokens": 4096,
+          "threads": 4
+        },
+        "evidence": {
+          "kind": "estimated",
+          "source": "agent:llmfit",
+          "notes": "Illustrative E4-like forecast; SYCL was not executed."
+        }
+      },
+      "measurements": [],
       "load_status": "not_tested"
     }
   ],
@@ -204,6 +228,6 @@
   "limitations": [
     "Entire record is synthetic; numeric values are not real measurements.",
     "HTTP 401 indicates authorization is required, not geo-blocking.",
-    "F05 is synthetic and illustrative based on E4; modes differ, comparison is not_comparable."
+    "F05 is synthetic and illustrative based on reconstructed E4 correspondence; CPU-only measured and GPU/SYCL estimated are different assessments and not_comparable."
   ]
 }

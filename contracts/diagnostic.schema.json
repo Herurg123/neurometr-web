@@ -668,7 +668,8 @@
           "anyOf": [
             {
               "type": "integer",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 9007199254740991
             },
             {
               "type": "null"
@@ -679,7 +680,8 @@
           "anyOf": [
             {
               "type": "integer",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 9007199254740991
             },
             {
               "type": "null"
@@ -690,7 +692,8 @@
           "anyOf": [
             {
               "type": "integer",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 9007199254740991
             },
             {
               "type": "null"
@@ -734,7 +737,8 @@
         },
         "repetitions": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 1,
+          "maximum": 9007199254740991
         },
         "benchmark_id": {
           "type": "string",
@@ -843,7 +847,8 @@
               "anyOf": [
                 {
                   "type": "integer",
-                  "minimum": 0
+                  "minimum": 0,
+                  "maximum": 9007199254740991
                 },
                 {
                   "type": "null"
@@ -854,7 +859,8 @@
               "anyOf": [
                 {
                   "type": "integer",
-                  "minimum": 0
+                  "minimum": 0,
+                  "maximum": 9007199254740991
                 },
                 {
                   "type": "null"
@@ -880,7 +886,8 @@
               "anyOf": [
                 {
                   "type": "integer",
-                  "minimum": 0
+                  "minimum": 0,
+                  "maximum": 9007199254740991
                 },
                 {
                   "type": "null"
@@ -891,7 +898,8 @@
               "anyOf": [
                 {
                   "type": "integer",
-                  "minimum": 0
+                  "minimum": 0,
+                  "maximum": 9007199254740991
                 },
                 {
                   "type": "null"
@@ -929,7 +937,8 @@
             "properties": {
               "index": {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0,
+                "maximum": 9007199254740991
               },
               "name": {
                 "anyOf": [
@@ -950,7 +959,8 @@
                     "anyOf": [
                       {
                         "type": "integer",
-                        "minimum": 0
+                        "minimum": 0,
+                        "maximum": 9007199254740991
                       },
                       {
                         "type": "null"
@@ -961,7 +971,8 @@
                     "anyOf": [
                       {
                         "type": "integer",
-                        "minimum": 0
+                        "minimum": 0,
+                        "maximum": 9007199254740991
                       },
                       {
                         "type": "null"
@@ -972,7 +983,8 @@
                     "anyOf": [
                       {
                         "type": "integer",
-                        "minimum": 0
+                        "minimum": 0,
+                        "maximum": 9007199254740991
                       },
                       {
                         "type": "null"

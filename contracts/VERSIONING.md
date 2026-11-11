@@ -1,11 +1,11 @@
 # Contract versioning and compatibility
 
-Owner: Neurometr orchestrator. Canonical location: \`neurometr-web/contracts/\`.
+Owner: Neurometr orchestrator. Canonical location: `neurometr-web/contracts/`.
 
 - Diagnostic schema, catalog schema, catalog-manifest schema, agent version, llmfit binary version and UI version are **independent**.
-- Initial schema versions: \`0.1.0\`; catalog **snapshot** release ID proposed \`YYYY.MM.DD.N\`, not the same thing as JSON Schema version.
-- In \`0.1.x\`, only textual/documentation or validator fixes preserving the **same accepted wire-data set and semantics** are allowed.
-- Added/removed fields, changed types, enums, meanings, nullable handling or compatibility require an explicitly approved new minor (for example \`0.2.0\`) and linked PRs. Do **not** infer all pre-1.0 versions are compatible.
+- Initial schema versions: `0.1.0`; catalog **snapshot** release ID proposed `YYYY.MM.DD.N`, not the same thing as JSON Schema version.
+- In `0.1.x`, only textual/documentation or validator fixes preserving the **same accepted wire-data set and semantics** are allowed.
+- Added/removed fields, changed types, enums, meanings, nullable handling or compatibility require an explicitly approved new minor (for example `0.2.0`) and linked PRs. Do **not** infer all pre-1.0 versions are compatible.
 - Viewers accept only explicitly enumerated supported versions. An unknown version must fail closed with a clear error, not be silently adapted.
 - Reports saved by Agent stay unchanged; optional in-memory projections are labeled with analysis/catalog versions.
 - The Agent pin copy must record original Web commit SHA and exact SHA-256 per canonical file. A schema change needs coordinated PRs with independent regression tests, no automatic merge.
@@ -22,3 +22,5 @@ Owner: Neurometr orchestrator. Canonical location: \`neurometr-web/contracts/\`.
 | latest.json | catalog-pointer 0.1.0 | Web publishes locator last, Agent fetches cautiously |
 
 Production release keys, source licenses, browser support and complete Ed25519 verification remain unapproved/unimplemented; no remote updates are enabled in this contract-only PR.
+
+**Draft clarification (B1 FIX):** these tighten accepted semantics prior to the first approved pin-copy. They do not grant permission to merge or publish. After freeze a changed semantic rejection policy requires an approved new version and compatibility tests.

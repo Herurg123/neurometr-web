@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:neurometr:schema:catalog:0.1.0",
   "title": "Neurometr model catalog v0.1.0",
-  "description": "Immutable snapshot metadata; no user benchmarks, automatic code updates or claimed applied llmfit overlays.",
+  "description": "Immutable snapshot metadata; no user benchmarks, automatic code updates or claimed applied llmfit overlays. Populated recommendation-relevant metadata must have field_provenance; validated semantically against source_snapshots.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -120,7 +120,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0,
+                "maximum": 9007199254740991
               },
               {
                 "type": "null"
@@ -131,7 +132,8 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0,
+                "maximum": 9007199254740991
               },
               {
                 "type": "null"
@@ -181,7 +183,8 @@
                   "anyOf": [
                     {
                       "type": "integer",
-                      "minimum": 0
+                      "minimum": 0,
+                      "maximum": 9007199254740991
                     },
                     {
                       "type": "null"
@@ -228,7 +231,7 @@
             "type": "object",
             "minProperties": 1,
             "propertyNames": {
-              "minLength": 1
+              "pattern": "^(architecture|parameters|context_tokens|modalities|artifacts\\[(0|[1-9][0-9]*)\\]\\.(format|quantization|size_bytes|revision|sha256|source_uri))$"
             },
             "additionalProperties": {
               "type": "array",
@@ -310,11 +313,13 @@
       "properties": {
         "conflict_count": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 9007199254740991
         },
         "unknown_metadata_count": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 9007199254740991
         }
       },
       "required": []

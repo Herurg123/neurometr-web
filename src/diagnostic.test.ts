@@ -118,7 +118,7 @@ describe('Semantic invariants equivalent to B1 validators', () => {
     b.engines[0].status = 'partial';
     expect(codeOf(() => parsed(b))).toBe('SEMANTIC_INVALID');
     const c = structuredClone(F01);
-    c.errors.push({ component: 'hardware', code: 'FAIL', message: 'Synthetic failure', retryable: false });
+    (c.errors as { component: string; code: string; message: string; retryable: boolean }[]).push({ component: 'hardware', code: 'FAIL', message: 'Synthetic failure', retryable: false });
     expect(codeOf(() => parsed(c))).toBe('SEMANTIC_INVALID');
   });
   it('rejects cloud_checks without cloud component, even when probes passed', () => {

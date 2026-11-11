@@ -1,6 +1,6 @@
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import diagnosticSchema from '../../contracts/diagnostic.schema.json';
+import diagnosticSchema from '../contracts/diagnostic.schema.json';
 import type { Diagnostic } from './types';
 import { DiagnosticImportError, MAX_DIAGNOSTIC_BYTES, parseStrictUtf8Bytes } from './strict-json';
 import { validateDiagnosticSemantics } from './semantics';

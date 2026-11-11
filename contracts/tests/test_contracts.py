@@ -187,6 +187,8 @@ def semantic_diagnostic(data):
             raise ContractError("error contradicts component status")
 
     cloud_status = components.get("cloud")
+    if data["cloud_checks"] and cloud_status is None:
+        raise ContractError("cloud_checks require cloud component")
     if cloud_status == "skipped" and data["cloud_checks"]:
         raise ContractError("skipped cloud component has executed checks")
     for cloud in data["cloud_checks"]:
@@ -532,6 +534,24 @@ class B1FixRegressionTests(unittest.TestCase):
         d = load_fixture("F03_diagnostic_offline_site.json")
         validate("diagnostic", d)
         self.assertEqual(d["overall_status"], "ok")
+
+    def test_cloud_checks_with_passed_probes_require_cloud_component(self):
+        d = load_fixture("F01_diagnostic_windows_ok.json")
+        self.assertTrue(d["cloud_checks"])
+        self.assertTrue(all(p["status"] == "passed" for c in d["cloud_checks"] for p in c["probes"]))
+        d["components"] = [c for c in d["components"] if c["component"] != "cloud"]
+        with self.assertRaisesRegex(ContractError, "cloud_checks require cloud component"):
+            validate("diagnostic", d)
+
+    def test_cloud_checks_with_non_failed_probes_require_cloud_component(self):
+        d = load_fixture("F01_diagnostic_windows_ok.json")
+        d["cloud_checks"][0]["probes"][1]["status"] = "not_tested"
+        d["cloud_checks"][0]["probes"][1]["http_status"] = None
+        d["cloud_checks"][0]["conclusion"] = "unknown"
+        self.assertFalse(any(p["status"] == "failed" for c in d["cloud_checks"] for p in c["probes"]))
+        d["components"] = [c for c in d["components"] if c["component"] != "cloud"]
+        with self.assertRaisesRegex(ContractError, "cloud_checks require cloud component"):
+            validate("diagnostic", d)
 
     def test_cloud_failure_hardware_ok_means_partial_not_failed(self):
         d = load_fixture("F01_diagnostic_windows_ok.json")

@@ -16,6 +16,6 @@ F01–F05 are valid diagnostic records, tested in Vitest and in real Chromium Fi
 
 ## Development and review
 
-GitHub Actions `.github/workflows/web-b2-ci.yml` performs npm dependency resolution, installation, TypeScript validation, Vitest, Vite static build, Playwright using the runner's installed Google Chrome (no browser download), screenshots and zipped artifacts. npm lockfile is generated in cloud CI during bootstrap and **must be committed in this feature branch before merge**.
+GitHub Actions `.github/workflows/web-b2-ci.yml` performs npm dependency resolution, installation, TypeScript validation, Vitest, Vite static build, Playwright using the runner's installed Google Chrome (no browser download), screenshots and zipped artifacts. The npm lockfile was generated in GitHub Actions bootstrap, verified and committed to this feature branch. Subsequent CI runs use `npm ci` with the committed exact dependency resolution.
 
 Production deployment remains blocked, no GitHub Release. Browser testing does not replace a real Windows Agent → file → viewer integration smoke test.

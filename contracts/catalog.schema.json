@@ -1,0 +1,376 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neurometr:schema:catalog:0.1.0",
+  "title": "Neurometr model catalog v0.1.0",
+  "description": "Immutable snapshot metadata; no user benchmarks, automatic code updates or claimed applied llmfit overlays. Populated recommendation-relevant metadata must have field_provenance; validated semantically against source_snapshots.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "const": "neurometr.catalog"
+    },
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "catalog_version": {
+      "type": "string",
+      "pattern": "^[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}\\.[1-9][0-9]*$"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+    },
+    "source_snapshots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://[^\\s]+$"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fetched_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+          },
+          "license_status": {
+            "enum": [
+              "verified",
+              "unverified",
+              "restricted",
+              "unknown"
+            ]
+          }
+        },
+        "required": [
+          "source_id",
+          "url",
+          "revision",
+          "fetched_at",
+          "license_status"
+        ]
+      }
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.-]*:.+$"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "method": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "value",
+                "source_id",
+                "method"
+              ]
+            }
+          },
+          "architecture": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "parameters": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "context_tokens": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "modalities": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "text",
+                "image",
+                "audio",
+                "video",
+                "embedding",
+                "other"
+              ]
+            }
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "format": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "quantization": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "size_bytes": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "revision": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sha256": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "source_uri": {
+                  "type": "string",
+                  "pattern": "^https://[^\\s]+$"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "format",
+                "quantization",
+                "size_bytes",
+                "revision"
+              ]
+            }
+          },
+          "field_provenance": {
+            "type": "object",
+            "minProperties": 1,
+            "propertyNames": {
+              "pattern": "^(architecture|parameters|context_tokens|modalities|artifacts\\[(0|[1-9][0-9]*)\\]\\.(format|quantization|size_bytes|revision|sha256|source_uri))$"
+            },
+            "additionalProperties": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/provenance"
+              }
+            }
+          }
+        },
+        "required": [
+          "model_id",
+          "aliases",
+          "architecture",
+          "parameters",
+          "context_tokens",
+          "modalities",
+          "artifacts",
+          "field_provenance"
+        ]
+      }
+    },
+    "llmfit_overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "target_model_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_slug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "field": {
+            "type": "string",
+            "minLength": 1
+          },
+          "proposed_value": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ]
+          },
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "const": "not_applied"
+          }
+        },
+        "required": [
+          "target_model_id",
+          "target_slug",
+          "field",
+          "proposed_value",
+          "source_id",
+          "reason",
+          "status"
+        ]
+      }
+    },
+    "ruleset_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "quality_report": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "conflict_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "unknown_metadata_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": []
+    }
+  },
+  "required": [
+    "kind",
+    "schema_version",
+    "catalog_version",
+    "generated_at",
+    "source_snapshots",
+    "models",
+    "llmfit_overrides"
+  ],
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_level": {
+          "enum": [
+            "source_code",
+            "official_metadata",
+            "independent_measurement",
+            "expert_assumption",
+            "unknown"
+          ]
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+        },
+        "override_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supersedes": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "source_id",
+        "evidence_level",
+        "observed_at"
+      ]
+    }
+  }
+}

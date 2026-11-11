@@ -1,0 +1,85 @@
+{
+  "kind": "neurometr.catalog",
+  "schema_version": "0.1.0",
+  "catalog_version": "2026.11.11.1",
+  "generated_at": "2026-11-11T10:00:00Z",
+  "source_snapshots": [
+    {
+      "source_id": "fixture-official",
+      "url": "https://example.org/fixture",
+      "revision": null,
+      "fetched_at": "2026-11-11T10:00:00Z",
+      "license_status": "unknown"
+    }
+  ],
+  "models": [
+    {
+      "model_id": "hf:example/example-1b",
+      "aliases": [],
+      "architecture": null,
+      "parameters": 1000000000,
+      "context_tokens": null,
+      "modalities": [
+        "text"
+      ],
+      "artifacts": [
+        {
+          "artifact_id": "gguf:q4_k_m:synthetic",
+          "format": "gguf",
+          "quantization": "Q4_K_M",
+          "size_bytes": 750000000,
+          "revision": null,
+          "sha256": null
+        }
+      ],
+      "field_provenance": {
+        "parameters": [
+          {
+            "source_id": "fixture-official",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T10:00:00Z"
+          }
+        ],
+        "modalities": [
+          {
+            "source_id": "fixture-official",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T10:00:00Z"
+          }
+        ],
+        "artifacts[0].size_bytes": [
+          {
+            "source_id": "fixture-official",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T10:00:00Z"
+          }
+        ],
+        "artifacts[0].format": [
+          {
+            "source_id": "fixture-official",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T10:00:00Z"
+          }
+        ],
+        "artifacts[0].quantization": [
+          {
+            "source_id": "fixture-official",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T10:00:00Z"
+          }
+        ]
+      }
+    }
+  ],
+  "llmfit_overrides": [
+    {
+      "target_model_id": "hf:example/example-1b",
+      "target_slug": "example-1b",
+      "field": "unsupported_forecast",
+      "proposed_value": 999,
+      "source_id": "fixture-official",
+      "reason": "Invalid attempt to claim applied override.",
+      "status": "applied"
+    }
+  ]
+}

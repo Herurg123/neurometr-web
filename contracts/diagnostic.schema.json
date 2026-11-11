@@ -1,0 +1,1068 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neurometr:schema:diagnostic:0.1.0",
+  "title": "Neurometr diagnostic contract v0.1.0",
+  "description": "Canonical normalized agent report; no raw llmfit output or device identifiers.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "const": "neurometr.diagnostic"
+    },
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+    },
+    "overall_status": {
+      "enum": [
+        "ok",
+        "partial",
+        "failed"
+      ]
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "const": "neurometr-agent"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+        },
+        "platform": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "platform"
+      ]
+    },
+    "engines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "partial",
+              "failed",
+              "skipped"
+            ]
+          },
+          "sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "version",
+          "status",
+          "sha256"
+        ]
+      }
+    },
+    "catalog_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "origin": {
+          "enum": [
+            "bundled",
+            "cached",
+            "downloaded"
+          ]
+        },
+        "compatibility": {
+          "enum": [
+            "passed",
+            "failed",
+            "indeterminate",
+            "not_tested",
+            "unsupported"
+          ]
+        }
+      },
+      "required": [
+        "version",
+        "sha256",
+        "origin",
+        "compatibility"
+      ]
+    },
+    "hardware": {
+      "$ref": "#/$defs/hardware"
+    },
+    "runtime_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "runtime_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "discovery_status": {
+            "enum": [
+              "detected",
+              "not_detected",
+              "unknown"
+            ]
+          },
+          "launch_status": {
+            "enum": [
+              "passed",
+              "failed",
+              "indeterminate",
+              "not_tested",
+              "unsupported"
+            ]
+          },
+          "backend_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evidence": {
+            "$ref": "#/$defs/evidence"
+          }
+        },
+        "required": [
+          "runtime_id",
+          "discovery_status",
+          "launch_status",
+          "backend_id",
+          "error_code",
+          "evidence"
+        ]
+      }
+    },
+    "model_assessments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "artifact_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_model_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "execution": {
+            "$ref": "#/$defs/execution"
+          },
+          "fit": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "status": {
+                "enum": [
+                  "fits",
+                  "limited",
+                  "does_not_fit",
+                  "unknown",
+                  "not_evaluated"
+                ]
+              },
+              "evidence": {
+                "$ref": "#/$defs/evidence"
+              }
+            },
+            "required": [
+              "status",
+              "evidence"
+            ]
+          },
+          "speed_estimate": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "tokens_per_second": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "algorithm_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "backend_id": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "execution": {
+                    "$ref": "#/$defs/execution"
+                  },
+                  "evidence": {
+                    "allOf": [
+                      {
+                        "$ref": "#/$defs/evidence"
+                      },
+                      {
+                        "properties": {
+                          "kind": {
+                            "const": "estimated"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "tokens_per_second",
+                  "algorithm_id",
+                  "backend_id",
+                  "execution",
+                  "evidence"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "measurements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/measurement"
+            }
+          },
+          "load_status": {
+            "enum": [
+              "passed",
+              "failed",
+              "indeterminate",
+              "not_tested",
+              "unsupported"
+            ]
+          }
+        },
+        "required": [
+          "model_id",
+          "artifact_id",
+          "source_model_name",
+          "execution",
+          "fit",
+          "speed_estimate",
+          "measurements",
+          "load_status"
+        ]
+      }
+    },
+    "cloud_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "service_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "origin": {
+            "const": "local_agent"
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+          },
+          "consent": {
+            "const": true
+          },
+          "network_context": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "proxy_mode": {
+                "enum": [
+                  "direct",
+                  "system",
+                  "custom",
+                  "unknown"
+                ]
+              }
+            },
+            "required": [
+              "proxy_mode"
+            ]
+          },
+          "probes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "stage": {
+                  "enum": [
+                    "dns",
+                    "tcp",
+                    "tls",
+                    "http",
+                    "api"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "passed",
+                    "failed",
+                    "indeterminate",
+                    "not_tested",
+                    "unsupported"
+                  ]
+                },
+                "duration_ms": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "http_status": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 100,
+                      "maximum": 599
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "error_code": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[A-Z][A-Z0-9_]*$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "evidence": {
+                  "$ref": "#/$defs/evidence"
+                }
+              },
+              "required": [
+                "stage",
+                "status",
+                "duration_ms",
+                "http_status",
+                "error_code",
+                "evidence"
+              ]
+            }
+          },
+          "conclusion": {
+            "enum": [
+              "reachable",
+              "auth_required",
+              "access_denied_unknown_reason",
+              "rate_limited",
+              "connection_failed",
+              "unknown",
+              "not_tested"
+            ]
+          }
+        },
+        "required": [
+          "service_id",
+          "target_id",
+          "origin",
+          "checked_at",
+          "consent",
+          "network_context",
+          "probes",
+          "conclusion"
+        ]
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "component": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "partial",
+              "failed",
+              "skipped"
+            ]
+          }
+        },
+        "required": [
+          "component",
+          "status"
+        ]
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "component": {
+            "type": "string",
+            "minLength": 1
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "retryable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "component",
+          "code",
+          "message",
+          "retryable"
+        ]
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "kind",
+    "schema_version",
+    "run_id",
+    "started_at",
+    "finished_at",
+    "overall_status",
+    "producer",
+    "engines",
+    "catalog_ref",
+    "hardware",
+    "runtime_checks",
+    "model_assessments",
+    "cloud_checks",
+    "components",
+    "errors",
+    "limitations"
+  ],
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "detected",
+            "estimated",
+            "measured",
+            "user_reported",
+            "derived",
+            "unknown"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+        },
+        "tool_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "source"
+      ]
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device_path": {
+          "enum": [
+            "cpu_only",
+            "gpu_offload",
+            "mixed",
+            "unknown"
+          ]
+        },
+        "backend_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "runtime_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "runtime_version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "gpu_layers": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "context_tokens": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "threads": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "device_path",
+        "backend_id",
+        "runtime_id",
+        "runtime_version",
+        "gpu_layers",
+        "context_tokens",
+        "threads"
+      ]
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "generation_tps",
+            "prompt_tps",
+            "ttft_ms",
+            "total_latency_ms",
+            "peak_working_set_bytes"
+          ]
+        },
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "enum": [
+            "tokens/s",
+            "ms",
+            "bytes"
+          ]
+        },
+        "repetitions": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "benchmark_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "execution": {
+          "$ref": "#/$defs/execution"
+        },
+        "evidence": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/evidence"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "measured"
+                }
+              }
+            }
+          ]
+        },
+        "latency_scope": {
+          "enum": [
+            "client",
+            "engine",
+            "unknown"
+          ]
+        },
+        "warmth": {
+          "enum": [
+            "cold",
+            "warm",
+            "unknown"
+          ]
+        },
+        "first_fragment_method": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "value",
+        "unit",
+        "repetitions",
+        "benchmark_id",
+        "execution",
+        "evidence"
+      ]
+    },
+    "hardware": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "os": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "family": {
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "arch": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidence": {
+              "$ref": "#/$defs/evidence"
+            }
+          },
+          "required": [
+            "family",
+            "version",
+            "arch",
+            "evidence"
+          ]
+        },
+        "cpu": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "model": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "physical_cores": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "logical_processors": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidence": {
+              "$ref": "#/$defs/evidence"
+            }
+          },
+          "required": [
+            "model",
+            "physical_cores",
+            "logical_processors",
+            "evidence"
+          ]
+        },
+        "ram": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "physical_total_bytes": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "available_bytes": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "available_observed_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d+)?Z$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidence": {
+              "$ref": "#/$defs/evidence"
+            }
+          },
+          "required": [
+            "physical_total_bytes",
+            "available_bytes",
+            "available_observed_at",
+            "evidence"
+          ]
+        },
+        "gpus": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "name": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "memory": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "dedicated_total_bytes": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "dedicated_available_bytes": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "shared_total_bytes": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "dedicated_total_bytes",
+                  "dedicated_available_bytes",
+                  "shared_total_bytes"
+                ]
+              },
+              "memory_topology": {
+                "enum": [
+                  "dedicated",
+                  "shared",
+                  "unified",
+                  "mixed",
+                  "unknown"
+                ]
+              },
+              "evidence": {
+                "$ref": "#/$defs/evidence"
+              }
+            },
+            "required": [
+              "index",
+              "name",
+              "memory",
+              "memory_topology",
+              "evidence"
+            ]
+          }
+        },
+        "npus": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "detection_status": {
+                "enum": [
+                  "detected",
+                  "not_detected",
+                  "unknown"
+                ]
+              },
+              "evidence": {
+                "$ref": "#/$defs/evidence"
+              }
+            },
+            "required": [
+              "name",
+              "detection_status",
+              "evidence"
+            ]
+          }
+        }
+      },
+      "required": [
+        "os",
+        "cpu",
+        "ram",
+        "gpus",
+        "npus"
+      ]
+    }
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "kind": "neurometr.diagnostic",
+  "schema_version": "0.1.0",
+  "run_id": "51c8bc48-78e1-4fd5-af89-f63cd2a6d055",
+  "started_at": "2026-11-11T10:00:00Z",
+  "finished_at": "2026-11-11T10:00:05Z",
+  "overall_status": "ok",
+  "producer": {
+    "name": "neurometr-agent",
+    "version": "0.1.0",
+    "platform": "windows-x64"
+  },
+  "engines": [
+    {
+      "name": "llmfit",
+      "version": "1.1.20",
+      "status": "ok",
+      "sha256": null
+    }
+  ],
+  "catalog_ref": {
+    "version": "2026.11.11.1",
+    "sha256": null,
+    "origin": "bundled",
+    "compatibility": "passed"
+  },
+  "hardware": {
+    "os": {
+      "family": "windows",
+      "version": "11",
+      "arch": "x64",
+      "evidence": {
+        "kind": "detected",
+        "source": "agent:os_api"
+      }
+    },
+    "cpu": {
+      "model": "Synthetic Example Processor",
+      "physical_cores": 4,
+      "logical_processors": 8,
+      "evidence": {
+        "kind": "detected",
+        "source": "agent:os_api"
+      }
+    },
+    "ram": {
+      "physical_total_bytes": 17179869184,
+      "available_bytes": 8589934592,
+      "available_observed_at": "2026-11-11T10:00:00Z",
+      "evidence": {
+        "kind": "detected",
+        "source": "agent:os_api"
+      }
+    },
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Synthetic Example GPU",
+        "memory": {
+          "dedicated_total_bytes": 4294967296,
+          "dedicated_available_bytes": null,
+          "shared_total_bytes": null
+        },
+        "memory_topology": "dedicated",
+        "evidence": {
+          "kind": "detected",
+          "source": "agent:os_api"
+        }
+      }
+    ],
+    "npus": []
+  },
+  "runtime_checks": [
+    {
+      "runtime_id": "llama.cpp",
+      "discovery_status": "detected",
+      "launch_status": "not_tested",
+      "backend_id": "cpu",
+      "error_code": null,
+      "evidence": {
+        "kind": "detected",
+        "source": "agent:llmfit"
+      }
+    }
+  ],
+  "model_assessments": [],
+  "cloud_checks": [],
+  "components": [
+    {
+      "component": "hardware",
+      "status": "ok"
+    },
+    {
+      "component": "llmfit",
+      "status": "ok"
+    },
+    {
+      "component": "cloud",
+      "status": "skipped"
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "Entire record is synthetic; numeric values are not real measurements.",
+    "HTTP 401 indicates authorization is required, not geo-blocking.",
+    "Offline scenario: bundled catalog; no remote update or network probes."
+  ]
+}

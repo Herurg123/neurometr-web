@@ -1,0 +1,97 @@
+{
+  "profile": "neurometr-json-numeric-0.1.0",
+  "vectors": [
+    {
+      "input": "0",
+      "accept": true
+    },
+    {
+      "input": "-0",
+      "accept": true
+    },
+    {
+      "input": "22.7",
+      "accept": true
+    },
+    {
+      "input": "0.1",
+      "accept": true
+    },
+    {
+      "input": "1e-10",
+      "accept": true
+    },
+    {
+      "input": "1.5e-100",
+      "accept": true
+    },
+    {
+      "input": "9007199254740991",
+      "accept": true
+    },
+    {
+      "input": "-9007199254740991",
+      "accept": true
+    },
+    {
+      "input": "9007199254740991.0",
+      "accept": true
+    },
+    {
+      "input": "9007199254740992",
+      "accept": false
+    },
+    {
+      "input": "-9007199254740992",
+      "accept": false
+    },
+    {
+      "input": "9007199254740992.0",
+      "accept": false
+    },
+    {
+      "input": "9.007199254740992e15",
+      "accept": false
+    },
+    {
+      "input": "1e308",
+      "accept": false
+    },
+    {
+      "input": "1e999",
+      "accept": false
+    },
+    {
+      "input": "-1e999",
+      "accept": false
+    },
+    {
+      "input": "1e309",
+      "accept": false
+    },
+    {
+      "input": "1e-999",
+      "accept": false
+    },
+    {
+      "input": "1.0000000000000001",
+      "accept": false
+    },
+    {
+      "input": "0.1234567890123456789012345",
+      "accept": false
+    },
+    {
+      "input": "NaN",
+      "accept": false
+    },
+    {
+      "input": "Infinity",
+      "accept": false
+    },
+    {
+      "input": "-Infinity",
+      "accept": false
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "kind": "neurometr.catalog-manifest",
+  "schema_version": "0.1.0",
+  "catalog_version": "2026.11.11.2",
+  "catalog_schema_version": "0.1.0",
+  "published_at": "2026-11-11T19:20:19Z",
+  "compatible_diagnostic_schema_versions": [
+    "0.1.0"
+  ],
+  "min_agent_version": "0.1.0",
+  "signing_key_id": "offline-unsigned-no-key",
+  "artifacts": [
+    {
+      "path": "/data/catalog/versions/2026.11.11.2/catalog.json",
+      "media_type": "application/json",
+      "bytes": 6589,
+      "sha256": "1d84ff596c589a4db004f8a3fa17490d5479f57db3d7b0a433a7e448289651d2"
+    }
+  ]
+}

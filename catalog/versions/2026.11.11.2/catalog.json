@@ -1,0 +1,197 @@
+{
+  "kind": "neurometr.catalog",
+  "schema_version": "0.1.0",
+  "catalog_version": "2026.11.11.2",
+  "generated_at": "2026-11-11T19:17:09Z",
+  "source_snapshots": [
+    {
+      "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/tree/9217f5db79a29953eb74d5343926648285ec7e67",
+      "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "fetched_at": "2026-11-11T19:17:09Z",
+      "license_status": "verified"
+    },
+    {
+      "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/tree/91cad51170dc346986eccefdc2dd33a9da36ead9",
+      "revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+      "fetched_at": "2026-11-11T19:17:09Z",
+      "license_status": "verified"
+    }
+  ],
+  "models": [
+    {
+      "model_id": "hf:Qwen/Qwen2.5-0.5B-Instruct",
+      "aliases": [],
+      "architecture": "qwen2",
+      "parameters": null,
+      "context_tokens": 32768,
+      "modalities": [
+        "text"
+      ],
+      "artifacts": [
+        {
+          "artifact_id": "gguf:sha256:74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+          "format": "gguf",
+          "quantization": "Q4_K_M",
+          "size_bytes": 491400032,
+          "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+          "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+          "source_uri": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/9217f5db79a29953eb74d5343926648285ec7e67/qwen2.5-0.5b-instruct-q4_k_m.gguf"
+        }
+      ],
+      "field_provenance": {
+        "architecture": [
+          {
+            "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "context_tokens": [
+          {
+            "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "modalities": [
+          {
+            "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].format": [
+          {
+            "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].quantization": [
+          {
+            "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].size_bytes": [
+          {
+            "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].revision": [
+          {
+            "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].sha256": [
+          {
+            "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].source_uri": [
+          {
+            "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ]
+      }
+    },
+    {
+      "model_id": "hf:Qwen/Qwen2.5-1.5B-Instruct",
+      "aliases": [],
+      "architecture": "qwen2",
+      "parameters": null,
+      "context_tokens": 32768,
+      "modalities": [
+        "text"
+      ],
+      "artifacts": [
+        {
+          "artifact_id": "gguf:sha256:6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+          "format": "gguf",
+          "quantization": "Q4_K_M",
+          "size_bytes": 1117320736,
+          "revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+          "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+          "source_uri": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/91cad51170dc346986eccefdc2dd33a9da36ead9/qwen2.5-1.5b-instruct-q4_k_m.gguf"
+        }
+      ],
+      "field_provenance": {
+        "architecture": [
+          {
+            "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "context_tokens": [
+          {
+            "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "modalities": [
+          {
+            "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].format": [
+          {
+            "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].quantization": [
+          {
+            "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].size_bytes": [
+          {
+            "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].revision": [
+          {
+            "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].sha256": [
+          {
+            "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ],
+        "artifacts[0].source_uri": [
+          {
+            "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+            "evidence_level": "official_metadata",
+            "observed_at": "2026-11-11T19:17:09Z"
+          }
+        ]
+      }
+    }
+  ],
+  "llmfit_overrides": []
+}

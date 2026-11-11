@@ -1,0 +1,52 @@
+{
+  "status": "metadata_verified_official_upstream_no_weights_downloaded",
+  "catalog_version": "2026.11.11.2",
+  "observed_at": "2026-11-11T19:17:09Z",
+  "probe_run_url": "https://github.com/Herurg123/neurometr-web/actions/runs/43085744751",
+  "licenses": "Apache-2.0 (confirmed card metadata and pinned LICENSE text)",
+  "remarks": [
+    "Both upstream GGUF files have exact byte sizes and LFS object SHA-256 from Hugging Face metadata, but their full bytes were NOT downloaded or independently hashed.",
+    "Parameters are rounded in upstream model cards and are therefore null; no exact integer is asserted.",
+    "The 32,768-token model context is a publisher-stated architecture maximum, not a tested fit on local hardware.",
+    "No benchmark, TPS, runtime support or hardware compatibility is inferred from this catalog.",
+    "Artifacts are referenced by pinned URL; this metadata catalog does not bundle model weights."
+  ],
+  "entries": [
+    {
+      "source_id": "hf-qwen2.5-0.5b-instruct-gguf",
+      "repo": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "model_id": "hf:Qwen/Qwen2.5-0.5B-Instruct",
+      "upstream_revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "model_card_url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/blob/9217f5db79a29953eb74d5343926648285ec7e67/README.md",
+      "license_url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/blob/9217f5db79a29953eb74d5343926648285ec7e67/LICENSE",
+      "artifact_page_url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/blob/9217f5db79a29953eb74d5343926648285ec7e67/qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      "upstream_artifact_bytes": 491400032,
+      "upstream_artifact_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "api_metadata_endpoint": "https://huggingface.co/api/models/Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "license_status": "verified",
+      "license_expression": "Apache-2.0",
+      "evidence_level": "official_metadata",
+      "fetched_at": "2026-11-11T19:17:09Z",
+      "context_32768_confirmed_in_card": true,
+      "quant_Q4_K_M_confirmed_in_card": true
+    },
+    {
+      "source_id": "hf-qwen2.5-1.5b-instruct-gguf",
+      "repo": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "model_id": "hf:Qwen/Qwen2.5-1.5B-Instruct",
+      "upstream_revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+      "model_card_url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/blob/91cad51170dc346986eccefdc2dd33a9da36ead9/README.md",
+      "license_url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/blob/91cad51170dc346986eccefdc2dd33a9da36ead9/LICENSE",
+      "artifact_page_url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/blob/91cad51170dc346986eccefdc2dd33a9da36ead9/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+      "upstream_artifact_bytes": 1117320736,
+      "upstream_artifact_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+      "api_metadata_endpoint": "https://huggingface.co/api/models/Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+      "license_status": "verified",
+      "license_expression": "Apache-2.0",
+      "evidence_level": "official_metadata",
+      "fetched_at": "2026-11-11T19:17:09Z",
+      "context_32768_confirmed_in_card": true,
+      "quant_Q4_K_M_confirmed_in_card": true
+    }
+  ]
+}

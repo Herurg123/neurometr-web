@@ -1,5 +1,5 @@
 /** B1 STATUS_EXECUTION_INVARIANTS.md, browser-side parity without new wire fields. */
-import type { Diagnostic, Execution } from './types';
+import type { Diagnostic, Evidence, Execution } from './types';
 import { DiagnosticImportError } from './strict-json';
 function fail(message: string): never { throw new DiagnosticImportError('SEMANTIC_INVALID', message); }
 const EXECUTION_KEYS: (keyof Execution)[] = [
@@ -29,10 +29,17 @@ export function comparisonFor(
   report: Diagnostic, assessed: Diagnostic['model_assessments'][number],
 ): 'comparable_configuration' | 'not_comparable' | null {
   if (!assessed.speed_estimate) return null;
-  const peer = report.model_assessments.find((a) =>
+  const peers = report.model_assessments.filter((a) =>
     a.model_id === assessed.model_id && a.artifact_id === assessed.artifact_id &&
     a.measurements.some((m) => m.kind === 'generation_tps'));
-  return peer ? compareAssessments(assessed, peer) : null;
+  if (peers.length === 0) return null;
+  return peers.some((peer) => compareAssessments(assessed, peer) === 'comparable_configuration')
+    ? 'comparable_configuration'
+    : 'not_comparable';
+}
+/** Provenance-specific warning: "measured" alone never implies a synthetic result. */
+export function isSyntheticMeasurement(evidence: Evidence): boolean {
+  return evidence.kind === 'measured' && evidence.source === 'synthetic:fixture';
 }
 export function validateDiagnosticSemantics(d: Diagnostic): void {
   if (Date.parse(d.finished_at) < Date.parse(d.started_at)) fail('Время окончания раньше начала диагностики.');

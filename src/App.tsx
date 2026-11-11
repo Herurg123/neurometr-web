@@ -3,7 +3,7 @@ import type { DragEvent, ChangeEvent } from 'react';
 import sampleF01 from '../contracts/fixtures/F01_diagnostic_windows_ok.json';
 import type { Diagnostic, Evidence, ComponentStatus, ProbeStatus } from './types';
 import { parseDiagnosticBytes, openDiagnosticFile, explainImportError } from './diagnostic';
-import { comparisonFor } from './semantics';
+import { comparisonFor, isSyntheticMeasurement } from './semantics';
 
 const langEvidence: Record<Evidence['kind'], string> = {
   detected: 'Обнаружено', estimated: 'Оценка', measured: 'Измерено',
@@ -146,7 +146,11 @@ function RuntimeAndModels({ report }: { report: Diagnostic }) {
                     <strong>{number(a.speed_estimate.tokens_per_second)} ток/с</strong>
                   </div>}
                   {a.measurements.map((m, j) => <div className="metric-line" key={j}>
-                    <div><span>{m.kind === 'generation_tps' ? 'Измерено: генерация' : m.kind}</span><DeviceBadge kind={m.evidence.kind} source={m.evidence.source}/></div>
+                    <div>
+                      <span>{m.kind === 'generation_tps' ? 'Измерено: генерация' : m.kind}</span>
+                      <DeviceBadge kind={m.evidence.kind} source={m.evidence.source}/>
+                      {isSyntheticMeasurement(m.evidence) && <span className="synthetic-measurement" data-testid="synthetic-measurement">Синтетическое тестовое измерение, не результат этого ПК</span>}
+                    </div>
                     <strong>{number(m.value)} {m.unit}</strong>
                   </div>)}
                   {!a.speed_estimate && a.measurements.length === 0 && <div className="empty-inline">Скорость не рассчитана и не измерена.</div>}

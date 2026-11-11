@@ -62,3 +62,28 @@ test('mobile viewport offers import and readable F05 result', async ({ page }) =
   await expect(page.locator('.comparison strong').getByText('not_comparable', { exact: true })).toBeVisible();
   await page.screenshot({ path: 'artifacts/screenshots/b2-f05-mobile.png', fullPage: true });
 });
+
+
+test('F05 imported fixture labels synthetic measurement by evidence.source', async ({ page }) => {
+  await page.goto('/');
+  await page.locator(input).setInputFiles(f('F05_diagnostic_cpu_vs_sycl.json'));
+  await expect(page.getByTestId('diagnostic-results')).toBeVisible();
+  await expect(page.getByTestId('synthetic-measurement')).toHaveText('Синтетическое тестовое измерение, не результат этого ПК');
+});
+
+test('measured evidence from a non-synthetic source has no synthetic UI warning', async ({ page }) => {
+  await page.goto('/');
+  const report = JSON.parse(await readFile(f('F05_diagnostic_cpu_vs_sycl.json'), 'utf8')) as {
+    model_assessments: { measurements: { evidence: { source: string } }[] }[];
+  };
+  report.model_assessments[0].measurements[0].evidence.source = 'agent:benchmark';
+  await page.locator(input).setInputFiles({
+    name: 'measurement.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(report)),
+  });
+  await expect(page.getByTestId('diagnostic-results')).toBeVisible();
+  await expect(page.getByTestId('synthetic-measurement')).toHaveCount(0);
+  await expect(page.getByText('22,7 токенов/с')).toHaveCount(0); // UI retains canonical tokens/s unit
+  await expect(page.getByText(/22,7 tokens\/s/)).toBeVisible();
+});

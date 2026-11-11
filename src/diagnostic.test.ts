@@ -10,7 +10,7 @@ import F08 from '../contracts/fixtures/F08_catalog_incompatible_override.json';
 import numeric from '../contracts/fixtures/numeric-vectors.json';
 import { DiagnosticImportError, MAX_DIAGNOSTIC_BYTES, parseStrictJson, parseStrictUtf8Bytes } from './strict-json';
 import { parseDiagnosticBytes, openDiagnosticFile } from './diagnostic';
-import { comparisonFor, compareAssessments } from './semantics';
+import { comparisonFor, compareAssessments, isSyntheticMeasurement } from './semantics';
 
 function parsed(value: unknown) { return parseDiagnosticBytes(new TextEncoder().encode(JSON.stringify(value))); }
 function codeOf(callback: () => unknown) {
@@ -152,5 +152,70 @@ describe('Semantic invariants equivalent to B1 validators', () => {
     const xss = '<img src=x onerror=alert(1)>';
     d.errors[0].message = xss;
     expect(parsed(d).errors[0].message).toBe(xss);
+  });
+});
+
+
+describe('B2 review: order-independent measurement comparison', () => {
+  it('chooses any compatible measurement even if earlier same-model measurements are incompatible', () => {
+    const report = parsed(F05);
+    const [cpu, sycl] = report.model_assessments;
+    const compatible = structuredClone(cpu);
+    // Known layer count: avoid mistaking unknown GPU layers for comparability.
+    sycl.execution.gpu_layers = 10;
+    sycl.speed_estimate!.execution.gpu_layers = 10;
+    compatible.execution = structuredClone(sycl.execution);
+    compatible.measurements[0].execution = structuredClone(sycl.execution);
+
+    report.model_assessments = [cpu, compatible, sycl];
+    expect(comparisonFor(report, sycl)).toBe('comparable_configuration');
+    report.model_assessments = [compatible, cpu, sycl];
+    expect(comparisonFor(report, sycl)).toBe('comparable_configuration');
+    report.model_assessments = [sycl, cpu, compatible];
+    expect(comparisonFor(report, sycl)).toBe('comparable_configuration');
+  });
+  it('returns not_comparable with multiple matching IDs if every measured execution differs', () => {
+    const report = parsed(F05);
+    const [cpu, sycl] = report.model_assessments;
+    const cpuOtherExecution = structuredClone(cpu);
+    cpuOtherExecution.execution.threads = 6;
+    cpuOtherExecution.measurements[0].execution.threads = 6;
+    report.model_assessments = [cpuOtherExecution, sycl, cpu];
+    expect(comparisonFor(report, sycl)).toBe('not_comparable');
+    report.model_assessments.reverse();
+    expect(comparisonFor(report, sycl)).toBe('not_comparable');
+  });
+  it('returns null if no same-model/artifact generation measurements exist', () => {
+    const report = parsed(F05);
+    const [cpu, sycl] = report.model_assessments;
+    report.model_assessments = [sycl];
+    expect(comparisonFor(report, sycl)).toBeNull();
+    const wrongArtifact = structuredClone(cpu);
+    wrongArtifact.artifact_id = 'gguf:another-quant';
+    report.model_assessments = [wrongArtifact, sycl];
+    expect(comparisonFor(report, sycl)).toBeNull();
+    const noGeneration = structuredClone(cpu);
+    noGeneration.measurements = [];
+    report.model_assessments = [noGeneration, sycl];
+    expect(comparisonFor(report, sycl)).toBeNull();
+  });
+  it('does not classify other model artifacts as compatible even if execution matches', () => {
+    const report = parsed(F05);
+    const [cpu, sycl] = report.model_assessments;
+    const otherModel = structuredClone(cpu);
+    otherModel.model_id = 'hf:example/different-model';
+    report.model_assessments = [otherModel, sycl];
+    expect(comparisonFor(report, sycl)).toBeNull();
+  });
+});
+describe('B2 review: evidence-based synthetic measurement labeling', () => {
+  it('labels F05 measured fixture and does not label measured output from a real source', () => {
+    const report = parsed(F05);
+    const measurement = report.model_assessments[0].measurements[0];
+    expect(measurement.evidence.kind).toBe('measured');
+    expect(measurement.evidence.source).toBe('synthetic:fixture');
+    expect(isSyntheticMeasurement(measurement.evidence)).toBe(true);
+    expect(isSyntheticMeasurement({ ...measurement.evidence, source: 'agent:benchmark' })).toBe(false);
+    expect(isSyntheticMeasurement({ ...measurement.evidence, kind: 'estimated' })).toBe(false);
   });
 });

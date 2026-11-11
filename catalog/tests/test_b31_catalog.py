@@ -145,7 +145,7 @@ class B31OfflineCatalogTests(unittest.TestCase):
 
     def test_corrupted_json_rejected(self):
         with self.assertRaises(ContractError):
-            decode_bounded(self.raw[:-1], LIMIT_CATALOG)
+            decode_bounded(self.raw.rstrip()[:-1], LIMIT_CATALOG)
 
     def test_corrupted_payload_checksum_rejected(self):
         altered = self.raw.replace(b'"qwen2"', b'"other"', 1)

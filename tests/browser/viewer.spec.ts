@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import path from 'node:path';
+import { readFile } from 'node:fs/promises';
 
 const f = (name: string) => path.join(process.cwd(), 'contracts/fixtures/', name);
 const input = 'input[type=file]';
@@ -28,9 +29,9 @@ test('F01-F05 import through browser File API and F05 comparison', async ({ page
     await page.locator(input).setInputFiles(f(name));
     await expect(page.getByTestId('diagnostic-results')).toBeVisible();
     await expect(page.getByRole('alert')).toHaveCount(0);
-    if (name.startsWith('F02')) await expect(page.getByText('LLMFIT_TIMEOUT')).toBeVisible();
+    if (name.startsWith('F02')) await expect(page.locator('.error-item strong').getByText('llmfit: LLMFIT_TIMEOUT')).toBeVisible();
     if (name.startsWith('F03')) await expect(page.getByText('Облачные проверки не проводились.')).toBeVisible();
-    if (name.startsWith('F05')) await expect(page.getByText('not_comparable')).toBeVisible();
+    if (name.startsWith('F05')) await expect(page.locator('.comparison strong').getByText('not_comparable', { exact: true })).toBeVisible();
   }
 });
 test('F06-F08 are controlled rejections, not catalog activation', async ({ page }) => {
@@ -44,8 +45,7 @@ test('F06-F08 are controlled rejections, not catalog activation', async ({ page 
 });
 test('XSS in diagnostic error is displayed as text and not executed', async ({ page }) => {
   await page.goto('/');
-  const mutated = await import('../../contracts/fixtures/F02_diagnostic_llmfit_timeout.json');
-  const report = structuredClone(mutated.default);
+  const report = JSON.parse(await readFile(f('F02_diagnostic_llmfit_timeout.json'), 'utf8')) as { errors: { message: string }[] };
   report.errors[0].message = '<img src=x onerror=window.__injected=true>';
   await page.locator(input).setInputFiles({
     name: 'xss.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(report)),
@@ -59,6 +59,6 @@ test('mobile viewport offers import and readable F05 result', async ({ page }) =
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   await page.locator(input).setInputFiles(f('F05_diagnostic_cpu_vs_sycl.json'));
-  await expect(page.getByText('not_comparable')).toBeVisible();
+  await expect(page.locator('.comparison strong').getByText('not_comparable', { exact: true })).toBeVisible();
   await page.screenshot({ path: 'artifacts/screenshots/b2-f05-mobile.png', fullPage: true });
 });

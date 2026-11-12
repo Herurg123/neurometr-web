@@ -13,8 +13,14 @@ test('WEB-QA-001: both documents use local icons, and favicon.ico is a real 200 
   for (const doc of ['/', '/viewer.html']) {
     const document = await page.goto(doc);
     expect(document?.status()).toBe(200);
-    await expect(page.locator('link[rel="icon"][href="/favicon.ico"]')).toHaveAttribute('type', 'image/x-icon');
-    await expect(page.locator('link[rel="icon"][href="/favicon.svg"]')).toHaveAttribute('type', 'image/svg+xml');
+    // Vite base './' may rewrite /favicon.ico to ./favicon.ico in dist.
+    // Check the actual resolved same-origin URL rather than the raw attribute.
+    const icoLink = page.locator('link[rel="icon"][type="image/x-icon"]');
+    const svgLink = page.locator('link[rel="icon"][type="image/svg+xml"]');
+    await expect(icoLink).toHaveCount(1);
+    await expect(svgLink).toHaveCount(1);
+    expect(new URL((await icoLink.getAttribute('href'))!, page.url()).href).toBe(LOCAL + '/favicon.ico');
+    expect(new URL((await svgLink.getAttribute('href'))!, page.url()).href).toBe(LOCAL + '/favicon.svg');
   }
   const ico = await request.get('/favicon.ico');
   expect(ico.status()).toBe(200);

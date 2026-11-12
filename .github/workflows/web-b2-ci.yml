@@ -48,8 +48,11 @@ jobs:
           test -s dist/viewer.html
           test -s dist/favicon.ico
           test -s dist/favicon.svg
-          grep -Fq 'href="/favicon.ico"' dist/index.html
-          grep -Fq 'href="/favicon.ico"' dist/viewer.html
+          # Vite base './' rewrites root asset references to relative URLs.
+          grep -Fq 'favicon.ico' dist/index.html
+          grep -Fq 'favicon.ico' dist/viewer.html
+          grep -Fq 'favicon.svg' dist/index.html
+          grep -Fq 'favicon.svg' dist/viewer.html
           test -n "$(find dist/assets -maxdepth 1 -type f -name '*.js' -print -quit)"
           test -n "$(find dist/assets -maxdepth 1 -type f -name '*.css' -print -quit)"
           echo "QA_FULL_STATIC_DIST=PASS"

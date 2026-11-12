@@ -11,13 +11,13 @@
 
 В основной ветке доступны импорт и проверка диагностических файлов v0.1.0, отображение аппаратных данных, статусов, доказательности и ограничений, а также первый базовый офлайн-каталог. **Сайт не опубликован в production.**
 
-**Технически проверено, но ещё не объединено:** [B3.2, Draft PR #4](https://github.com/Herurg123/neurometr-web/pull/4) прошёл сквозной Windows Agent → JSON → Chromium File API E2E в GitHub Actions. **B3.2 пока не находится в `main`** и ожидает отдельного разрешения на merge. Проверки в облачном CI не равнозначны испытанию компьютера владельца.
+**B3.2 технически реализован и проверен:** [PR #4](https://github.com/Herurg123/neurometr-web/pull/4) подтверждает сквозной Windows Agent → JSON → Chromium File API E2E в [GitHub Actions](https://github.com/Herurg123/neurometr-web/actions/runs/43181258244). Проверки на облачном Windows runner не равнозначны испытанию компьютера владельца.
 
 ## История реализации: от нового к старому
 
-### B3.2. Настоящий Agent → браузер — технически проверен, Draft (не в main)
+### B3.2. Настоящий Agent → браузер: Windows E2E PASS
 
-[B3.2, PR #4](https://github.com/Herurg123/neurometr-web/pull/4) **остаётся Draft и не объединён**. Проверенный HEAD E2E-кода: `fe8bede4e2f04a7c932d918d08ce312d5f45575b`. [GitHub Actions — Windows E2E и Linux-регрессии PASS](https://github.com/Herurg123/neurometr-web/actions/runs/43154823866).
+[B3.2, PR #4](https://github.com/Herurg123/neurometr-web/pull/4) технически реализует и проверяет цепочку реальный Agent → JSON → Chromium File API. Проверенный HEAD E2E-кода: `fe8bede4e2f04a7c932d918d08ce312d5f45575b`. [GitHub Actions — Windows E2E и Linux-регрессии PASS](https://github.com/Herurg123/neurometr-web/actions/runs/43154823866); [повторные проверки с русским README — PASS](https://github.com/Herurg123/neurometr-web/actions/runs/43181258244).
 
 - На **GitHub-hosted Windows 2025 x64** обычный Agent A3.3 из закреплённого commit `f63d38fa8018572f570d60f6bf652ee2bb7e64c3` сформировал настоящий `diagnostic.json` **без test-only**, llmfit, загрузки моделей и тяжёлых бенчмарков.
 - Полные Go FullValidator и Web Python oracle подтвердили диагностический контракт **v0.1.0**, а Chromium открыл файл через настоящий браузерный File API. Каталог: `origin=bundled`, версия **2026.11.11.2**, SHA-256 **1d84ff596c589a4db004f8a3fa17490d5479f57db3d7b0a433a7e448289651d2**.
@@ -71,6 +71,6 @@ npm run test:browser
 - Наличие Qwen в каталоге не означает, что модели были скачаны, протестированы, запущены или что известна их скорость (TPS).
 - Проверка оборудования происходит в отдельном Agent; сам сайт не диагностирует ПК и не устанавливает runtime.
 - Обновление удалённых каталогов с Ed25519 и production deployment не активированы.
-- B3.2 подтверждён **только технически** в Windows/Linux GitHub Actions; [PR #4](https://github.com/Herurg123/neurometr-web/pull/4) остаётся Draft и не является функциональностью объединённого `main`. На оборудовании владельца E2E не проверялся.
+- B3.2 технически проверен на GitHub-hosted Windows/Linux runners ([PR #4](https://github.com/Herurg123/neurometr-web/pull/4), [CI](https://github.com/Herurg123/neurometr-web/actions/runs/43181258244)); на оборудовании владельца E2E не проверялся.
 
 **Правило документации:** обновлять этот README в том же PR при существенном изменении возможностей; исторические этапы располагать от нового к старому.

@@ -19,8 +19,11 @@ async function mockProduction(page: Page, blocked = false) {
   // No real requests to neurometr.ru; serve the locally built static files.
   await page.route(HOST + '/**', async (route) => {
     const url = new URL(route.request().url());
-    const res = await route.fetch({ url: LOCAL + url.pathname + url.search });
-    await route.fulfill({ response: res });
+    // Route.fetch disallows HTTPS -> HTTP URL changes. Node fetches LOCAL only;
+    // the browser sees a fully mocked HTTPS response without remote traffic.
+    const res = await fetch(LOCAL + url.pathname + url.search);
+    const body = Buffer.from(await res.arrayBuffer());
+    await route.fulfill({ status: res.status, contentType: res.headers.get('content-type') ?? 'application/octet-stream', body });
   });
   // No real requests to mc.yandex.ru. All counter and beacon calls are fake.
   await page.route('https://mc.yandex.ru/**', async (route) => {

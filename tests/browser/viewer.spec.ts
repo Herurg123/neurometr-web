@@ -8,7 +8,7 @@ const input = 'input[type=file]';
 test('F01 demo renders a usable offline report and creates screenshot', async ({ page }) => {
   const requests: string[] = [];
   page.on('request', (req) => { if (!req.url().startsWith('http://127.0.0.1:4173/')) requests.push(req.url()); });
-  await page.goto('/');
+  await page.goto('/viewer.html');
   await expect(page.getByRole('heading', { name: /Возможности вашего ПК/ })).toBeVisible();
   await page.getByRole('button', { name: 'Показать пример' }).click();
   await expect(page.getByTestId('diagnostic-results')).toBeVisible();
@@ -22,7 +22,7 @@ test('F01 demo renders a usable offline report and creates screenshot', async ({
 });
 
 test('F01-F05 import through browser File API and F05 comparison', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/viewer.html');
   for (const name of ['F01_diagnostic_windows_ok.json','F02_diagnostic_llmfit_timeout.json',
                       'F03_diagnostic_offline_site.json','F04_diagnostic_unknown_igpu.json',
                       'F05_diagnostic_cpu_vs_sycl.json']) {
@@ -35,7 +35,7 @@ test('F01-F05 import through browser File API and F05 comparison', async ({ page
   }
 });
 test('F06-F08 are controlled rejections, not catalog activation', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/viewer.html');
   for (const name of ['F06_diagnostic_unsupported_schema.json','F07_catalog_invalid_checksum.json',
                       'F08_catalog_incompatible_override.json']) {
     await page.locator(input).setInputFiles(f(name));
@@ -44,7 +44,7 @@ test('F06-F08 are controlled rejections, not catalog activation', async ({ page 
   }
 });
 test('XSS in diagnostic error is displayed as text and not executed', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/viewer.html');
   const report = JSON.parse(await readFile(f('F02_diagnostic_llmfit_timeout.json'), 'utf8')) as { errors: { message: string }[] };
   report.errors[0].message = '<img src=x onerror=window.__injected=true>';
   await page.locator(input).setInputFiles({
@@ -57,7 +57,7 @@ test('XSS in diagnostic error is displayed as text and not executed', async ({ p
 });
 test('mobile viewport offers import and readable F05 result', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
+  await page.goto('/viewer.html');
   await page.locator(input).setInputFiles(f('F05_diagnostic_cpu_vs_sycl.json'));
   await expect(page.locator('.comparison strong').getByText('not_comparable', { exact: true })).toBeVisible();
   await page.screenshot({ path: 'artifacts/screenshots/b2-f05-mobile.png', fullPage: true });
@@ -65,14 +65,14 @@ test('mobile viewport offers import and readable F05 result', async ({ page }) =
 
 
 test('F05 imported fixture labels synthetic measurement by evidence.source', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/viewer.html');
   await page.locator(input).setInputFiles(f('F05_diagnostic_cpu_vs_sycl.json'));
   await expect(page.getByTestId('diagnostic-results')).toBeVisible();
   await expect(page.getByTestId('synthetic-measurement')).toHaveText('Синтетическое тестовое измерение, не результат этого ПК');
 });
 
 test('measured evidence from a non-synthetic source has no synthetic UI warning', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/viewer.html');
   const report = JSON.parse(await readFile(f('F05_diagnostic_cpu_vs_sycl.json'), 'utf8')) as {
     model_assessments: { measurements: { evidence: { source: string } }[] }[];
   };

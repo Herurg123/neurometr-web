@@ -64,7 +64,7 @@ try {
     }
   });
   page.on('pageerror', () => { pageErrors++; }); // Never print browser error text.
-  await page.goto(LOCAL + '/', { waitUntil: 'networkidle' });
+  await page.goto(LOCAL + '/viewer.html', { waitUntil: 'networkidle' });
   // The only transfer of real diagnostics is a LOCAL OS file to the browser File API.
   await page.locator('input[type=file]').setInputFiles(REPORT);
   await page.locator('[data-testid=diagnostic-results]').waitFor({ state: 'visible', timeout: 20_000 });

@@ -5,7 +5,7 @@ const f = (name: string) => path.join(process.cwd(), 'contracts', 'fixtures', na
 const input = 'input[type=file]';
 
 test('B3.2 synthetic partial hardware and optional llmfit failure preserve hardware', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/viewer.html');
   const d = JSON.parse(await readFile(f('F01_diagnostic_windows_ok.json'), 'utf8')) as {
     overall_status:string; components:{component:string;status:string}[];
   };
@@ -24,7 +24,7 @@ test('B3.2 synthetic partial hardware and optional llmfit failure preserve hardw
 });
 
 test('B3.2 synthetic unknown dedicated and free VRAM stay unknown', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/viewer.html');
   await page.locator(input).setInputFiles(f('F04_diagnostic_unknown_igpu.json'));
   await expect(page.getByTestId('diagnostic-results')).toBeVisible();
   await expect(page.getByTestId('gpu-dedicated-total').first()).toHaveText('Неизвестно');
@@ -32,7 +32,7 @@ test('B3.2 synthetic unknown dedicated and free VRAM stay unknown', async ({ pag
 });
 
 test('B3.2 rejects damaged JSON, duplicate keys, wrong kind, oversized and unsigned manifest', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/viewer.html');
   const cases = [
     {name:'broken.json',buffer:Buffer.from('{"kind":')},
     {name:'duplicate.json',buffer:Buffer.from('{"kind":"neurometr.diagnostic","kind":"neurometr.diagnostic"}')},

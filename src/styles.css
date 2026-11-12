@@ -5,3 +5,9 @@
 
 /* Only benchmark evidence with source=synthetic:fixture receives this warning. */
 .metric-line .synthetic-measurement{display:inline-block;background:#4b3727;color:#ffe0aa;border:1px solid #81623f;border-radius:6px;padding:6px 9px;max-width:250px;white-space:normal;font-size:11px;line-height:1.4}
+
+/* QA #8: visible, keyboard-operable full-document navigation; no router or report state transfer. */
+.viewer-home-link{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 12px;border:1px solid #526a94;border-radius:8px;color:#e6edff;text-decoration:none;white-space:nowrap;font-size:12px;font-weight:700}
+.viewer-home-link:hover{background:#202f50;border-color:#98aefa}
+.viewer-home-link:focus-visible{outline:3px solid #a7b5ff;outline-offset:3px}
+@media(max-width:400px){.header-right .version{display:none}.viewer-home-link{padding:7px 9px}}

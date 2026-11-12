@@ -57,9 +57,38 @@ def main():
     original_web_catalog = WEB / "catalog" / "versions" / CATALOG_VERSION / "catalog.json"
     web_catalog = original_web_catalog.read_bytes()
     agent_catalog = (AGENT / "bundled" / "catalog.json").read_bytes()
-    require(web_catalog == agent_catalog, "Agent/Web catalog bytes differ")
-    require(len(agent_catalog) == CATALOG_BYTES and
-            hashlib.sha256(agent_catalog).hexdigest() == CATALOG_SHA, "catalog pin mismatch")
+    # Exact git blob is the immutable reference. Checkout working trees on
+    # Windows may convert LF -> CRLF unless attributes force eol=lf.
+    blob = run_silent(
+        ["git", "show", "HEAD:catalog/versions/" + CATALOG_VERSION + "/catalog.json"],
+        cwd=WEB,
+    )
+    attr = run_silent(
+        ["git", "check-attr", "eol", "--",
+         "catalog/versions/" + CATALOG_VERSION + "/catalog.json"],
+        cwd=WEB,
+    )
+    good_blob = len(blob) == CATALOG_BYTES and hashlib.sha256(blob).hexdigest() == CATALOG_SHA
+    good_web = len(web_catalog) == CATALOG_BYTES and hashlib.sha256(web_catalog).hexdigest() == CATALOG_SHA
+    good_agent = len(agent_catalog) == CATALOG_BYTES and hashlib.sha256(agent_catalog).hexdigest() == CATALOG_SHA
+    equal = web_catalog == agent_catalog == blob
+    eol_lf = attr.strip().endswith(b": lf")
+    # These public catalog byte counts and PASS/FAIL labels are safe for logs;
+    # the catalog content and actual runner hardware are never printed.
+    print(
+        "B32_WINDOWS_CATALOG_WEB_BYTES=" + str(len(web_catalog)) +
+        " WEB_SHA256=" + ("PASS" if good_web else "FAIL") +
+        " AGENT_BYTES=" + str(len(agent_catalog)) +
+        " AGENT_SHA256=" + ("PASS" if good_agent else "FAIL") +
+        " GIT_BLOB_SHA256=" + ("PASS" if good_blob else "FAIL") +
+        " BYTE_EQUAL=" + ("PASS" if equal else "FAIL") +
+        " WEB_EOL_LF=" + ("PASS" if eol_lf else "FAIL"),
+        flush=True,
+    )
+    if blob == agent_catalog and web_catalog != blob and web_catalog.replace(b"\r\n", b"\n") == blob:
+        print("B32_WINDOWS_CATALOG_CRLF_DRIFT=DETECTED", flush=True)
+    require(good_blob and good_web and good_agent and equal and eol_lf,
+            "Windows catalog checkout integrity failed")
     lock = json.loads((AGENT / "bundled" / "catalog.lock.json").read_bytes())
     require(lock["source_commit"] == EXPECTED_WEB_CATALOG_COMMIT and
             lock["catalog_version"] == CATALOG_VERSION and

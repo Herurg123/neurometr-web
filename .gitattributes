@@ -1,0 +1,3 @@
+# Preserve exact approved catalog.json bytes across Windows and Linux checkouts.
+# No change to Git blob or canonical snapshot: only checkout EOL policy.
+catalog/versions/2026.11.11.2/catalog.json text eol=lf

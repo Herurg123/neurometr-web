@@ -42,12 +42,30 @@ jobs:
         run: npm run test
       - name: Static production build
         run: npm run build
+      - name: Assert complete two-page production dist for QA
+        run: |
+          test -s dist/index.html
+          test -s dist/viewer.html
+          test -s dist/favicon.ico
+          test -s dist/favicon.svg
+          grep -Fq 'href="/favicon.ico"' dist/index.html
+          grep -Fq 'href="/favicon.ico"' dist/viewer.html
+          test -n "$(find dist/assets -maxdepth 1 -type f -name '*.js' -print -quit)"
+          test -n "$(find dist/assets -maxdepth 1 -type f -name '*.css' -print -quit)"
+          echo "QA_FULL_STATIC_DIST=PASS"
       - name: Check existing browser (no Chromium download)
         run: |
           which google-chrome || which google-chrome-stable
           google-chrome --version || google-chrome-stable --version
       - name: Browser integration tests and screenshot
         run: npm run test:browser
+      - name: Upload complete dist for production QA comparison
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: neurometr-pr6-complete-dist
+          path: dist/
+          retention-days: 14
+          if-no-files-found: error
       - name: Collect static build and review evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

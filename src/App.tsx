@@ -253,7 +253,7 @@ export default function App() {
       <header className="header">
         <div className="wrap header-inner">
           <div className="brand"><span className="brand-mark">N<span>.</span></span><span>НЕЙРОМЕТР</span><span className="brand-divider" /><span className="brand-sub">JSON VIEWER</span></div>
-          <div className="header-right"><span className="header-online"><span className="dot"/> БЕЗ ОТПРАВКИ ДАННЫХ</span><span className="version">v0.1.0</span></div>
+          <div className="header-right"><a className="viewer-home-link" href="/">На главную</a><span className="header-online"><span className="dot"/> БЕЗ ОТПРАВКИ ДАННЫХ</span><span className="version">v0.1.0</span></div>
         </div>
       </header>
 

@@ -1,5 +1,76 @@
-# Нейрометр Web
+# Нейрометр: статический сайт (Web)
 
-Статический React + TypeScript viewer диагностических JSON v0.1.0. Канонические схемы и F01–F08: [`contracts/`](contracts/README.md). Реализация интерфейса B2: [`docs/B2_VIEWER.md`](docs/B2_VIEWER.md).
+Веб-часть **Нейрометра** написана на **React + TypeScript**. Она открывает диагностические файлы через браузерный **File API** и обрабатывает их локально, без обязательного сервера, отправки JSON в Интернет или телеметрии.
 
-Клиентский импорт через browser File API, без загрузки диагностического файла в Интернет, без обязательного backend. GitHub Actions выполняет сборку, тесты и сохраняет статический `dist/` как артефакт для ревью. Production deployment не настроен.
+Проект состоит из **двух связанных репозиториев**:
+
+- [neurometr-agent](https://github.com/Herurg123/neurometr-agent) — локальная диагностика Windows и экспорт диагностического JSON.
+- [neurometr-web](https://github.com/Herurg123/neurometr-web) — статический сайт, канонические контракты и каталог моделей (этот репозиторий).
+
+## Текущее состояние
+
+В основной ветке доступны импорт и проверка диагностических файлов v0.1.0, отображение аппаратных данных, статусов, доказательности и ограничений, а также первый базовый офлайн-каталог. **Сайт не опубликован в production.**
+
+**B3.2 технически реализован и проверен:** [PR #4](https://github.com/Herurg123/neurometr-web/pull/4) подтверждает сквозной Windows Agent → JSON → Chromium File API E2E в [GitHub Actions](https://github.com/Herurg123/neurometr-web/actions/runs/43181258244). Проверки на облачном Windows runner не равнозначны испытанию компьютера владельца.
+
+## История реализации: от нового к старому
+
+### B3.2. Настоящий Agent → браузер: Windows E2E PASS
+
+[B3.2, PR #4](https://github.com/Herurg123/neurometr-web/pull/4) технически реализует и проверяет цепочку реальный Agent → JSON → Chromium File API. Проверенный HEAD E2E-кода: `fe8bede4e2f04a7c932d918d08ce312d5f45575b`. [GitHub Actions — Windows E2E и Linux-регрессии PASS](https://github.com/Herurg123/neurometr-web/actions/runs/43154823866); [повторные проверки с русским README — PASS](https://github.com/Herurg123/neurometr-web/actions/runs/43181258244).
+
+- На **GitHub-hosted Windows 2025 x64** обычный Agent A3.3 из закреплённого commit `f63d38fa8018572f570d60f6bf652ee2bb7e64c3` сформировал настоящий `diagnostic.json` **без test-only**, llmfit, загрузки моделей и тяжёлых бенчмарков.
+- Полные Go FullValidator и Web Python oracle подтвердили диагностический контракт **v0.1.0**, а Chromium открыл файл через настоящий браузерный File API. Каталог: `origin=bundled`, версия **2026.11.11.2**, SHA-256 **1d84ff596c589a4db004f8a3fa17490d5479f57db3d7b0a433a7e448289651d2**.
+- Проверено отображение ОС, CPU, RAM, GPU и неизвестной VRAM, отсутствие ложных утверждений о NPU, `llmfit=skipped`, отсутствие вымышленных TPS/запусков моделей и видимость ограничений. **Нет оценок моделей** не означает **нет моделей в каталоге**.
+- [Linux CI](https://github.com/Herurg123/neurometr-web/actions/runs/43154823866) на том же HEAD: **44 контрактных, 16 каталожных, 49 Vitest и 10 синтетических Playwright тестов PASS**, TypeScript и Vite build PASS.
+- Реальный JSON оставался во временном приватном каталоге runner, не публиковался в Git, Actions artifacts или скриншотах. Браузерный тест запретил внешние запросы и upload из страницы; очистка прошла. Это **не** доказательство отсутствия системного трафика самого браузера.
+- **Не проверялись:** ПК владельца, работа Qwen или llmfit, GPU/SYCL/NPU-бенчмарки, реальные TPS, Ed25519-обновления, production deployment. [Техническая документация B3.2](docs/B3_2_REAL_AGENT_E2E.md).
+
+### B3.1. Проверенный базовый каталог
+
+[PR #3](https://github.com/Herurg123/neurometr-web/pull/3) объединён в main: коммит **bb828bb09372e16cf63d04371d5f9367eee2526e**.
+
+- [Snapshot](catalog/versions/2026.11.11.2/catalog.json) версии **2026.11.11.2** содержит две реальные модели Qwen и два GGUF Q4_K_M артефакта, без скачивания весов.
+- Размер каталога **6589 байт**, SHA-256 **1d84ff596c589a4db004f8a3fa17490d5479f57db3d7b0a433a7e448289651d2**.
+- Метаданные взяты из закреплённых официальных источников Qwen на Hugging Face. Точное число параметров не подтверждено и оставлено null, llmfit_overrides пуст.
+- [Manifest](catalog/manifests/2026.11.11.2/manifest.json) **не подписан**, поэтому не является доказательством подлинности удалённого издателя.
+- [CI](https://github.com/Herurg123/neurometr-web/actions/runs/43087239199): **44 контрактных + 16 каталожных тестов PASS**. [Документация каталога](catalog/README.md).
+
+### B2. Браузерный просмотрщик
+
+[PR #2](https://github.com/Herurg123/neurometr-web/pull/2) объединён: коммит **5e290fa7c47ccf7be528b00c947a5a9d5e1a71a6**.
+
+- Локальный импорт через File API без обязательного backend или upload.
+- Строгая проверка UTF-8, размера, дублированных ключей, чисел, канонической JSON Schema Draft 2020-12 и семантических инвариантов.
+- Отображение CPU/RAM/GPU, runtime, проверок, частичных ошибок и ограничений; detected, estimated, measured, unknown и not_tested различаются.
+- Синтетические F01–F08 используются только как тесты, не как результаты компьютера владельца. [Документация B2](docs/B2_VIEWER.md).
+
+### B1. Канонические контракты
+
+[PR #1](https://github.com/Herurg123/neurometr-web/pull/1) добавил утверждённые схемы v0.1.0 и тестовые fixtures F01–F08.
+
+- [contracts/](contracts/README.md) — канонический источник схем и регрессионных сценариев для обоих репозиториев.
+- Agent использует закреплённую копию с исходным Web commit и SHA-256, а не произвольную изменяемую версию.
+
+## Разработка и тестирование
+
+Основная сборка и CI выполняются **в GitHub Actions**. Команды для разработчиков с установленным Node.js:
+
+~~~bash
+npm ci
+npm run typecheck
+npm run test
+npm run build
+npm run test:browser
+~~~
+
+Статический результат находится в dist/. Это **не** требование устанавливать инструменты разработки на компьютер владельца.
+
+## Ограничения
+
+- Наличие Qwen в каталоге не означает, что модели были скачаны, протестированы, запущены или что известна их скорость (TPS).
+- Проверка оборудования происходит в отдельном Agent; сам сайт не диагностирует ПК и не устанавливает runtime.
+- Обновление удалённых каталогов с Ed25519 и production deployment не активированы.
+- B3.2 технически проверен на GitHub-hosted Windows/Linux runners ([PR #4](https://github.com/Herurg123/neurometr-web/pull/4), [CI](https://github.com/Herurg123/neurometr-web/actions/runs/43181258244)); на оборудовании владельца E2E не проверялся.
+
+**Правило документации:** обновлять этот README в том же PR при существенном изменении возможностей; исторические этапы располагать от нового к старому.

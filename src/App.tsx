@@ -88,8 +88,9 @@ function Hardware({ report }: { report: Diagnostic }) {
               <div className="device-top"><strong>{gpu.name ?? 'Неизвестная GPU'}</strong><DeviceBadge kind={gpu.evidence.kind} source={gpu.evidence.source}/></div>
               <div className="facts compact">
                 <div><span>Топология</span><strong>{gpu.memory_topology}</strong></div>
-                <div><span>Выделенная память</span><strong>{bytes(gpu.memory.dedicated_total_bytes)}</strong></div>
-                <div><span>Разделяемая память</span><strong>{bytes(gpu.memory.shared_total_bytes)}</strong></div>
+                <div><span>Выделенная память</span><strong data-testid="gpu-dedicated-total">{bytes(gpu.memory.dedicated_total_bytes)}</strong></div>
+                <div><span>Свободная VRAM</span><strong data-testid="gpu-dedicated-free">{bytes(gpu.memory.dedicated_available_bytes)}</strong></div>
+                <div><span>Разделяемая память</span><strong data-testid="gpu-shared-total">{bytes(gpu.memory.shared_total_bytes)}</strong></div>
               </div>
             </div>
           )) : <p className="empty">GPU не обнаружены в отчёте.</p>}
@@ -163,7 +164,7 @@ function RuntimeAndModels({ report }: { report: Diagnostic }) {
               </article>
             );
           })}
-          {!report.model_assessments.length && <div className="panel empty">Оценок моделей нет. Частичный отказ не обнуляет результаты аппаратной диагностики.</div>}
+          {!report.model_assessments.length && <div className="panel empty">Оценок моделей нет. Это не означает, что каталог пуст: модели из каталога не загружались и не тестировались. Частичный отказ не обнуляет результаты аппаратной диагностики.</div>}
         </div>
       </Section>
     </>
